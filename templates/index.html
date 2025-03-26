@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="text-center mb-4">Finden Sie die passende Unternehmensberatung</h1>
+            <form action="/find_consultants" method="post" class="card p-4 shadow-sm">
+                <div class="mb-3">
+                    <label for="needs" class="form-label">Was sind Ihre geschäftlichen Anforderungen?</label>
+                    <small class="form-text text-muted d-block mb-2">Je detaillierter Sie Ihre Anforderungen beschreiben, desto genauer können wir passende Beratungen für Sie finden.</small>
+                    <textarea class="form-control" id="needs" name="needs" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="industry" class="form-label">Ihre Branche</label>
+                    <select class="form-select" id="industry" name="industry" required>
+                        <option value="">Bitte wählen Sie Ihre Branche</option>
+                        <option value="Industrie & Produktion">Industrie & Produktion</option>
+                        <option value="Finanzdienstleistungen & Versicherungen">Finanzdienstleistungen & Versicherungen</option>
+                        <option value="IT & Digitales">IT & Digitales</option>
+                        <option value="Handel & E-Commerce">Handel & E-Commerce</option>
+                        <option value="Gesundheit & Pharma">Gesundheit & Pharma</option>
+                        <option value="Energie & Infrastruktur">Energie & Infrastruktur</option>
+                        <option value="Immobilien & Bau">Immobilien & Bau</option>
+                        <option value="Dienstleistungen & Beratung">Dienstleistungen & Beratung</option>
+                        <option value="Öffentlicher Sektor">Öffentlicher Sektor</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="consulting_field" class="form-label">Beratungsfeld</label>
+                    <select class="form-select" id="consulting_field" name="consulting_field" required>
+                        <option value="">Bitte wählen Sie ein Beratungsfeld</option>
+                        <option value="IT-Beratung">IT-Beratung</option>
+                        <option value="Strategieberatung">Strategieberatung</option>
+                        <option value="Marketing & Vertrieb">Marketing & Vertrieb</option>
+                        <option value="Finanzberatung & Controlling">Finanzberatung & Controlling</option>
+                        <option value="HR & Personalberatung">HR & Personalberatung</option>
+                        <option value="Rechtsberatung">Rechtsberatung</option>
+                        <option value="M&A & Unternehmensverkauf">M&A & Unternehmensverkauf</option>
+                        <option value="Steuerberatung">Steuerberatung</option>
+                        <option value="Nachhaltigkeit & ESG-Beratung">Nachhaltigkeit & ESG-Beratung</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Bevorzugter Standort</label>
+                    <input type="text" class="form-control" id="location" name="location" value="München">
+                </div>
+                <button type="submit" class="btn btn-primary">Beratungen finden</button>
+            </form>
+
+            {% if error %}
+            <div class="alert alert-danger mt-4" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <div id="results" class="mt-4">
+                <!-- Results will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.querySelector('form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Laden...</span></div></div>';
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form)
+            });
+            const data = await response.json();
+
+            if (data.error) {
+                resultsDiv.innerHTML = `<div class="alert alert-danger" role="alert">${data.error}</div>`;
+                return;
+            }
+
+            let html = '<div class="row">';
+            data.firms.forEach(firm => {
+                html += `
+                    <div class="col-md-12">
+                        <div class="card result-card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${firm.name}</h5>
+                                <p class="card-text">${firm.reasoning}</p>
+                                <a href="${firm.website}" class="btn btn-primary" target="_blank">Website besuchen</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+        } catch (error) {
+            resultsDiv.innerHTML = '<div class="alert alert-danger" role="alert">Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.</div>';
+        }
+    });
+</script>
+{% endblock %}

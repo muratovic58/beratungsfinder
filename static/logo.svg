@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background Circle -->
+    <circle cx="100" cy="100" r="90" fill="#2563eb"/>
+    
+    <!-- Decorative Elements -->
+    <circle cx="100" cy="100" r="85" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+    <circle cx="100" cy="100" r="80" fill="none" stroke="white" stroke-width="1" opacity="0.2"/>
+    
+    <!-- Main Text -->
+    <text x="100" y="120" font-family="Arial" font-size="90" font-weight="bold" fill="white" text-anchor="middle">BF</text>
+    
+    <!-- Small Dots -->
+    <circle cx="45" cy="100" r="4" fill="white" opacity="0.6"/>
+    <circle cx="155" cy="100" r="4" fill="white" opacity="0.6"/>
+    
+    <!-- Curved Lines -->
+    <path d="M 60,60 Q 100,40 140,60" stroke="white" stroke-width="2" fill="none" opacity="0.3"/>
+    <path d="M 60,140 Q 100,160 140,140" stroke="white" stroke-width="2" fill="none" opacity="0.3"/>
+</svg>
